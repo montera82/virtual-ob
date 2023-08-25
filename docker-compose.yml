@@ -1,0 +1,36 @@
+version: "3.4" 
+
+services:
+  mock-uniqueness-service:
+    build:
+      context: .
+      dockerfile: uniqueness-service-mock/Dockerfile
+    command: start --data /app/initializerJson.json
+    networks:
+      - demo
+    ports:
+      - "8001:8001"
+    volumes:
+      - type: bind
+        source: ./uniqueness-service-mock/initializerJson.json
+        target: /app/initializerJson.json
+    healthcheck: 
+      test: ["CMD", "curl", "--fail", "http://localhost:8001/health-check"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  virtual-orb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - demo
+    ports:
+      - "8002:8002" 
+    depends_on:
+      mock-uniqueness-service:
+        condition: service_healthy
+
+networks:
+  demo:
