@@ -11,8 +11,8 @@ This project simulates the functionalities of an Orb, providing simplified capab
 |                    |---------------------->|                             |
 +--------------------+                       +-----------------------------+
 
-Virtual-ORB: Positioned at the left side. Represents the service that has a job running periodically every 5 seconds. This job sends HTTP requests to the Mock Uniqueness Service.
-submitting battery, cpu usage, cpu temp, disk space as well as simulates signups, submitting random iris codes to the api. 
+Virtual-ORB: Positioned at the left side. Represents the service that has two jobs running periodically approximately every 5 seconds ( configurable via the `STATUS_PERIODIC_INTERVAL` and
+`SIGN_UP_PERIODIC_INTERVAL` variables in the .env file ). The first job submits battery, cpu usage, cpu temp, disk space, while the second job simulates signups, submitting random iris codes to the Mock Uniqueness Service. 
 
 ## How the Project is Organized
 
