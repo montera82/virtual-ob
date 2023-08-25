@@ -46,8 +46,10 @@ func main() {
 	cbMaxRequests, _ := strconv.Atoi(cbMaxRequestsStr)
 	cbIntervalStr := GetEnvWithDefault("CB_INTERVAL", "60s")
 	cbInterval, _ := time.ParseDuration(cbIntervalStr)
-	tickerIntervalStr := GetEnvWithDefault("TICKER_INTERVAL", "5s")
-	tickerInterval, _ := time.ParseDuration(tickerIntervalStr)
+	statusPeriodicIntervalStr := GetEnvWithDefault("STATUS_PERIODIC_INTERVAL", "4s")
+	statusPeriodicInterval, _ := time.ParseDuration(statusPeriodicIntervalStr)
+	signUpPeriodicIntervalStr := GetEnvWithDefault("SIGN_UP_PERIODIC_INTERVAL", "5s")
+	signUpPeriodicInterval, _ := time.ParseDuration(signUpPeriodicIntervalStr)
 	baseURL := GetEnvWithDefault("BASE_URL", "http://mock-uniqueness-service:8001")
 	snowflakeNode, err := snowflake.NewNode(orbID)
 	if err != nil {
@@ -63,7 +65,6 @@ func main() {
 		Interval:    cbInterval,
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
 			failureRatio := float64(counts.TotalFailures) / float64(counts.Requests)
-
 			return counts.Requests >= 3 && failureRatio >= 0.6
 		},
 	}
@@ -74,41 +75,46 @@ func main() {
 	systemInfo := platform.NewSystemInfo()
 	status := service.NewStatusSvc(requestSvc, systemInfo)
 
-	ticker := time.NewTicker(tickerInterval)
+	statusTicker := time.NewTicker(statusPeriodicInterval)
+	signUpTicker := time.NewTicker(signUpPeriodicInterval)
 	done := make(chan bool)
 
+	// Goroutine for periodically reporting status
 	go func() {
 		for {
 			select {
 			case <-done:
 				return
-			case <-ticker.C:
-				//1. Periodically report status
+			case <-statusTicker.C:
 				err := status.Report()
 				if err != nil {
-					logger.Error("Reporting status failed",
-						zap.Error(err))
+					logger.Error("Reporting status failed", zap.Error(err))
 				} else {
 					logger.Info("Reporting status succeeded")
 				}
+			}
+		}
+	}()
 
-				//2. Periodically simulate a signup and submit images ..
+	// Goroutine for periodically simulating a signup process
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case <-signUpTicker.C:
 				imgData, err := platform.GenerateRandomImageData()
 				if err != nil {
-					logger.Error("Scanning iris image failed",
-						zap.Error(err))
+					logger.Error("Scanning iris image failed", zap.Error(err))
 				}
 
 				err = signUp.SignUp(imgData)
 				if err != nil {
-					logger.Error("Signing up failed",
-						zap.Error(err))
+					logger.Error("Signing up failed", zap.Error(err))
 				} else {
 					logger.Info("Signing up succeeded")
 				}
-
 			}
-
 		}
 	}()
 
@@ -117,7 +123,7 @@ func main() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
 	logger.Info("Gracefully shutting down server...")
-	ticker.Stop()
+	statusTicker.Stop()
 	done <- true
 	os.Exit(0)
 
