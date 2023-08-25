@@ -1,0 +1,145 @@
+{
+    "uuid": "26a571d8-e8e6-4d3c-aa03-f99bd9f3b1e0",
+    "lastMigration": 28,
+    "name": "Uniqueness server",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 8001,
+    "hostname": "",
+    "folders": [],
+    "routes": [
+        {
+            "uuid": "eaaf82ae-743f-4a09-9836-36eb8783f74a",
+            "type": "http",
+            "documentation": "Report system status",
+            "method": "post",
+            "endpoint": "status",
+            "responses": [
+                {
+                    "uuid": "289371d9-0990-4ded-9973-76b622718fe1",
+                    "body": "{\n  \"success\": true,\n  \"message\": \"Status recorded!\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "e3385c49-930e-4665-8495-acb5924c0625",
+            "type": "http",
+            "documentation": "Validate and sign up image hash",
+            "method": "post",
+            "endpoint": "sign-up",
+            "responses": [
+                {
+                    "uuid": "ac152867-73fe-4208-b5fd-f1cb6a5685d7",
+                    "body": "{\n  \"success\": true,\n  \"message\": \"Registration successful!\"\n}",
+                    "latency": 0,
+                    "statusCode": 201,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "AND",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "5e905f4d-604c-4ff7-af23-f4221f2a35db",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "health-check",
+            "responses": [
+                {
+                    "uuid": "dcad2eb7-acdc-468e-864f-be8b168b0da3",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        }
+    ],
+    "rootChildren": [
+        {
+            "type": "route",
+            "uuid": "eaaf82ae-743f-4a09-9836-36eb8783f74a"
+        },
+        {
+            "type": "route",
+            "uuid": "e3385c49-930e-4665-8495-acb5924c0625"
+        },
+        {
+            "type": "route",
+            "uuid": "5e905f4d-604c-4ff7-af23-f4221f2a35db"
+        }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "proxyRemovePrefix": false,
+    "tlsOptions": {
+        "enabled": false,
+        "type": "CERT",
+        "pfxPath": "",
+        "certPath": "",
+        "keyPath": "",
+        "caPath": "",
+        "passphrase": ""
+    },
+    "cors": true,
+    "headers": [
+        {
+            "key": "Content-Type",
+            "value": "application/json"
+        }
+    ],
+    "proxyReqHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "proxyResHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "data": []
+}
