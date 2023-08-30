@@ -81,4 +81,4 @@ ok      virtual-orb/pkg/service 1.611s  coverage: 86.8% of statements
 ## Versions used.
 
 go 1.20
-docker 4.5.0 and docker-compose 3.4
+docker 4.5.0 and docker-compose 3.4.
