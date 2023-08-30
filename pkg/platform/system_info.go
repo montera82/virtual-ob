@@ -21,7 +21,7 @@ func init() {
 }
 
 // NewSystemInfo creates a new instance of systemInfo which implements
-// the domain.SystemInfo interface. It provides mock system status details.
+// the domain.SystemInfo interface. It provides mock system status details
 func NewSystemInfo() domain.SystemInfo {
 	return &systemInfo{}
 }
